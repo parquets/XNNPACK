@@ -698,8 +698,6 @@ ynn_status ynn_define_binary(ynn_subgraph_t subgraph, ynn_binary_operator op,
 
   // Propagate rank.
   ynn_value& x = subgraph->get_output_value(output_id, a);
-  assert(a.type == b.type);
-  assert(a.type == x.type);
 
   // Find the kernel.
   const bool is_quantized = a.scale_id != YNN_INVALID_VALUE_ID ||

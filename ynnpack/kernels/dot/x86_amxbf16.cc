@@ -6,6 +6,7 @@
 #include <cstddef>
 
 #include "ynnpack/base/bfloat16.h"
+#include "ynnpack/base/log.h"
 #include "ynnpack/kernels/dot/x86_amx.h"
 
 namespace ynn {

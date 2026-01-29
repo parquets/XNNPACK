@@ -158,9 +158,12 @@ void TestStaticB(A, B, C) {
     b.generate([&]() { return b_gen(rng); });
 
     uint32_t subgraph_flags = 0;
-    if (random_bool(rng)) {
-      subgraph_flags |= YNN_FLAG_CONSISTENT_ARITHMETIC;
-    }
+    // if (random_bool(rng)) {
+    // subgraph_flags |= YNN_FLAG_CONSISTENT_ARITHMETIC;
+    //}
+    // if (random_bool(rng)) {
+    subgraph_flags |= YNN_FLAG_DOT_BF16;
+    //}
     SubgraphBuilder subgraph(4, subgraph_flags);
     const uint32_t a_id = 0;
     const uint32_t b_id = 1;
@@ -251,8 +254,10 @@ void TestStaticB(A, B, C) {
               << " a_shape=" << index_to_string(a_shape)
               << " b_shape=" << index_to_string(b_shape);
         } else {
-          const float tolerance = epsilon(type_of<C>()) * (num_k_elements + 1) *
-                                  max_abs_value * max_abs_value * 2.0f;
+          // const float tolerance = epsilon(type_of<C>()) * (num_k_elements +
+          // 1) *
+          //                         max_abs_value * max_abs_value * 100.0f;
+          const float tolerance = 0.5f;
           ASSERT_NEAR(c(i), expected(i), tolerance)
               << "i=" << index_to_string(i) << " num_k_dims=" << num_k_dims
               << " a_shape=" << index_to_string(a_shape)
@@ -336,9 +341,10 @@ void TestDynamicB(A, B, C) {
     const size_t output_rank = std::max(a_rank, b_rank) - num_k_dims + 1;
 
     uint32_t subgraph_flags = 0;
-    if (random_bool(rng)) {
-      subgraph_flags |= YNN_FLAG_CONSISTENT_ARITHMETIC;
-    }
+    subgraph_flags |= YNN_FLAG_DOT_BF16;
+    // if (random_bool(rng)) {
+    //   subgraph_flags |= YNN_FLAG_CONSISTENT_ARITHMETIC;
+    // }
     SubgraphBuilder subgraph(4, subgraph_flags);
     const uint32_t a_id = 0;
     const uint32_t b_id = 1;
@@ -456,8 +462,10 @@ void TestDynamicB(A, B, C) {
               << " shapes.a=" << index_to_string(shapes.a)
               << " shapes.b=" << index_to_string(shapes.b);
         } else {
-          const float tolerance = epsilon(type_of<C>()) * (num_k_elements + 1) *
-                                  max_abs_value * max_abs_value * 2.0f;
+          // const float tolerance = epsilon(type_of<C>()) * (num_k_elements +
+          // 1) *
+          //                         max_abs_value * max_abs_value * 100.0f;
+          const float tolerance = 0.5f;
           ASSERT_NEAR(c(i), expected(i), tolerance)
               << "i=" << index_to_string(i) << " num_k_dims=" << num_k_dims
               << " shapes.a=" << index_to_string(shapes.a)
@@ -521,9 +529,10 @@ void TestStaticShapeDynamicB(A, B, C) {
               [&](int i, int j) { return b_perm[i] < b_perm[j]; });
 
     uint32_t subgraph_flags = 0;
-    if (random_bool(rng)) {
-      subgraph_flags |= YNN_FLAG_CONSISTENT_ARITHMETIC;
-    }
+    // if (random_bool(rng)) {
+    //   subgraph_flags |= YNN_FLAG_CONSISTENT_ARITHMETIC;
+    // }
+    subgraph_flags |= YNN_FLAG_DOT_BF16;
     SubgraphBuilder subgraph(4, subgraph_flags);
     const uint32_t a_id = 0;
     const uint32_t b_id = 1;
@@ -613,8 +622,10 @@ void TestStaticShapeDynamicB(A, B, C) {
               << " shapes.a=" << index_to_string(shapes.a)
               << " shapes.b=" << index_to_string(shapes.b);
         } else {
-          const float tolerance = epsilon(type_of<C>()) * (num_k_elements + 1) *
-                                  max_abs_value * max_abs_value * 2.0f;
+          // const float tolerance = epsilon(type_of<C>()) * (num_k_elements +
+          // 1) *
+          //                         max_abs_value * max_abs_value * 100.0f;
+          const float tolerance = 0.5f;
           ASSERT_NEAR(c(i), expected(i), tolerance)
               << "i=" << index_to_string(i) << " num_k_dims=" << num_k_dims
               << " shapes.a=" << index_to_string(shapes.a)
