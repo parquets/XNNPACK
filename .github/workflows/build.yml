@@ -411,6 +411,10 @@ jobs:
         run: |
           autoninja -C out/Debug
         working-directory: ${{ github.workspace }}/xnnpack
+      - name: Run tests
+        run: |
+          python3 scripts/run-gn-tests.py out/Debug
+        working-directory: ${{ github.workspace }}/xnnpack
 
   bazel-linux-x86_64-clang-18:
     runs-on: 'ubuntu-24.04-8core'
