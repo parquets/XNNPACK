@@ -14,6 +14,7 @@
 
 #include <gtest/gtest.h>
 #include "ynnpack/base/arch.h"
+#include "ynnpack/base/bfloat16.h"
 #include "ynnpack/base/test/fuzz_test.h"
 #include "ynnpack/base/test/random.h"
 #include "ynnpack/base/test/tensor.h"
@@ -277,6 +278,19 @@ const std::vector<Shape> all_shapes = []() {
   shapes.push_back({8, 4, 0, 0, padding});
   return shapes;
 }();
+
+TEST(MixedRealOps, subtract_fp32_bf16) {
+  const binary_kernel* kernel = get_binary_kernel(
+      ynn_binary_subtract, ynn_type_fp32, ynn_type_bf16, ynn_type_bf16);
+  ASSERT_NE(kernel, nullptr);
+
+  KernelInfo kernel_info(0, kernel->op, kernel->init_params);
+  for (const auto& shape : all_shapes) {
+    TestOp<float, bfloat16, bfloat16>(kernel_info, subtract{}, shape);
+    TestOpBroadcastA<float, bfloat16, bfloat16>(kernel_info, subtract{}, shape);
+    TestOpBroadcastB<float, bfloat16, bfloat16>(kernel_info, subtract{}, shape);
+  }
+}
 
 #define YNN_ELEMENTWISE_KERNEL(arch_flags, kernel, op, init_params_fn, type_a, \
                                type_b, type_x)                                 \
